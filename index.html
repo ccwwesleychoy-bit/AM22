@@ -34,6 +34,285 @@
     }
   </script>
   <link rel="stylesheet" href="styles.css" />
+  <style>
+    /* ================================================================
+       INLINE STYLES — duplicates styles.css so Cloudflare cannot break
+       the layout by mangling/minifying/rewriting the external file.
+       This block takes precedence due to cascade order.
+       ================================================================ */
+
+    *, *::before, *::after { box-sizing: border-box; }
+
+    html {
+      scroll-behavior: smooth;
+      /* Site-wide text scale — bumps every rem-based size up ~12.5% for
+         better readability (16px → 18px baseline). */
+      font-size: 112.5%;
+    }
+    @media (max-width: 640px) {
+      html { font-size: 106.25%; }
+    }
+
+    body {
+      font-family: 'Cormorant Garamond', 'Noto Serif TC', Georgia, serif;
+      font-weight: 300;
+      -webkit-font-smoothing: antialiased;
+      font-variant-numeric: lining-nums;
+      font-feature-settings: "lnum" 1;
+    }
+
+    /* Wordmark — hero AM22 */
+    .wordmark {
+      font-family: 'Tenor Sans', sans-serif;
+      font-weight: 400;
+      font-size: clamp(80px, 15.5vw, 180px);
+      letter-spacing: 0.28em;
+      line-height: 1;
+      color: #2C2416;
+    }
+
+    /* Nav + footer logo */
+    .logo-text {
+      font-family: 'Tenor Sans', sans-serif;
+      font-weight: 400;
+      letter-spacing: 0.28em;
+    }
+
+    /* Language switcher */
+    .lang-btn {
+      font-family: 'Cormorant Garamond', 'Noto Serif TC', Georgia, serif;
+      font-weight: 300;
+      font-size: 12.5px;
+      letter-spacing: 0.22em;
+      text-transform: uppercase;
+      color: #A08060;
+      cursor: pointer;
+      background: none;
+      border: none;
+      padding: 10px 6px;
+      min-height: 44px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      transition: color 0.2s;
+    }
+    .lang-btn.active,
+    .lang-btn:hover { color: #2C2416; }
+
+    /* Cart icon button — 44px touch area */
+    header nav button[aria-label="Cart"] {
+      min-height: 44px;
+      min-width: 44px;
+    }
+
+    /* Scroll indicator */
+    .scroll-line {
+      width: 1px;
+      height: 48px;
+      background: linear-gradient(to bottom, transparent, #A08060);
+      animation: scrollFade 2s ease-in-out infinite;
+    }
+    @keyframes scrollFade {
+      0%, 100% { opacity: 0.3; transform: scaleY(0.6); transform-origin: top; }
+      50%      { opacity: 1;   transform: scaleY(1); }
+    }
+
+    /* Cart drawer transition */
+    #cart-drawer {
+      transition: transform 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    /* Image hover (desktop only) */
+    @media (hover: hover) and (pointer: fine) {
+      article img {
+        transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+      }
+      article:hover img {
+        transform: scale(1.04);
+      }
+    }
+
+    /* Section anchor scroll margin */
+    section { scroll-margin-top: 80px; }
+
+    /* Pull quote */
+    .pull-quote {
+      font-size: clamp(20px, 3vw, 32px);
+      font-weight: 300;
+      letter-spacing: 0.18em;
+      line-height: 1.6;
+      font-style: italic;
+    }
+
+    /* Focus rings */
+    button:focus-visible,
+    a:focus-visible {
+      outline: 1px solid #2C2416;
+      outline-offset: 3px;
+    }
+
+    /* Cart overlay blur */
+    #cart-overlay { backdrop-filter: blur(2px); }
+
+    /* Tabular price figures */
+    .price {
+      font-variant-numeric: tabular-nums lining-nums;
+      font-feature-settings: "tnum" 1, "lnum" 1;
+    }
+
+    /* ================ HERO LAYOUT (centered + anchored) ================ */
+    #home {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      min-height: 100vh;
+    }
+    @supports (min-height: 100svh) {
+      #home { min-height: 100svh; }
+    }
+    .hero-stack {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      width: 100%;
+      max-width: 42rem;
+      margin: 0 auto;
+      gap: clamp(2rem, 6vh, 3.5rem);
+    }
+    .hero-tagline-group {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      width: 100%;
+      gap: 0.5rem;
+    }
+
+    /* Reserved min-heights — keep AM22 anchored across languages */
+    #home [data-i18n="heroEyebrow"] {
+      min-height: 1.25em;
+      display: flex; align-items: center; justify-content: center;
+    }
+    #home [data-i18n="heroTagline"] {
+      min-height: 3.5rem;
+      display: flex; align-items: center; justify-content: center;
+    }
+    #home [data-i18n="heroSub"] {
+      min-height: 1.75rem;
+      display: flex; align-items: center; justify-content: center;
+    }
+    @media (min-width: 768px) {
+      #home [data-i18n="heroTagline"] { min-height: 4rem; }
+      #home [data-i18n="heroSub"]     { min-height: 2rem; }
+    }
+
+    /* Chinese hero tagline — clean sans, no italic */
+    html[lang="zh-Hant"] [data-i18n="heroTagline"] {
+      font-family: 'Noto Sans TC', 'PingFang TC', 'Microsoft JhengHei', sans-serif;
+      font-weight: 300;
+      font-style: normal;
+      font-size: clamp(18px, 3.2vw, 26px);
+      letter-spacing: 0.08em;
+    }
+
+    /* ================ MOBILE OPTIMIZATIONS ================ */
+
+    /* Wordmark sizing on small phones */
+    @media (max-width: 640px) {
+      .wordmark {
+        font-size: clamp(60px, 17vw, 98px);
+        letter-spacing: 0.18em;
+      }
+    }
+    @media (max-width: 360px) {
+      .wordmark {
+        font-size: 54px;
+        letter-spacing: 0.16em;
+      }
+    }
+
+    /* Prevent iOS auto-zoom on form inputs (<16px triggers zoom) */
+    @media (max-width: 640px) {
+      #checkout-modal input[type="text"],
+      #checkout-modal input[type="tel"],
+      #checkout-modal input[type="email"],
+      #checkout-modal input:not([type]),
+      #checkout-modal textarea {
+        font-size: 16px;
+      }
+    }
+
+    /* Tighter section padding on mobile */
+    @media (max-width: 640px) {
+      #shop, #story {
+        padding-top: 64px;
+        padding-bottom: 64px;
+      }
+      #story .grid {
+        gap: 2.5rem !important;
+        margin-top: 2.5rem !important;
+      }
+      #home .scroll-line { display: none; }
+    }
+
+    /* Cart qty buttons — tappable */
+    #cart-items button {
+      min-width: 36px;
+      min-height: 36px;
+      font-size: 16px;
+    }
+
+    /* Narrow-phone Add to Cart — let letter-spacing breathe */
+    @media (max-width: 400px) {
+      #shop article button {
+        letter-spacing: 0.18em;
+        font-size: 10px;
+        padding-left: 8px;
+        padding-right: 8px;
+      }
+    }
+
+    /* Footer nav wraps cleanly on mobile */
+    @media (max-width: 640px) {
+      footer nav {
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: 0.75rem 1.25rem;
+      }
+      footer nav span:first-of-type { display: none; }
+    }
+
+    /* Checkout modal */
+    #checkout-modal { isolation: isolate; }
+    @media (max-width: 767px) {
+      #checkout-modal #checkout-body {
+        padding: 1.5rem 1.25rem 2rem;
+      }
+      #checkout-modal #btn-submit-order {
+        padding-top: 18px;
+        padding-bottom: 18px;
+      }
+      #checkout-modal .sticky {
+        box-shadow: 0 1px 0 rgba(44, 36, 22, 0.06);
+      }
+    }
+
+    body.checkout-open { overflow: hidden; }
+
+    /* Autofill — keep cream background */
+    input:-webkit-autofill,
+    textarea:-webkit-autofill {
+      -webkit-box-shadow: 0 0 0 1000px #F5F0E8 inset;
+      -webkit-text-fill-color: #2C2416;
+      caret-color: #2C2416;
+    }
+
+    /* Checkout summary stays in brand serif */
+    #checkout-summary {
+      font-family: 'Cormorant Garamond', 'Noto Serif TC', Georgia, serif;
+    }
+  </style>
 </head>
 <body class="bg-cream text-brown font-serif" translate="no">
 

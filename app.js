@@ -146,13 +146,13 @@
           <div class="flex-1 min-w-0">
             <p class="text-sm tracking-[0.04em] leading-snug text-brown">${t(p.nameKey)}</p>
             <p class="text-[11px] tracking-[0.22em] uppercase text-brown-light mt-1">${t(p.subKey)}</p>
-            <div class="flex items-center justify-between mt-3.5">
-              <div class="flex items-center gap-3">
+            <div class="flex items-center justify-between mt-3.5 gap-4">
+              <div class="flex items-center gap-3 shrink-0">
                 <button onclick="AM22.changeQty('${id}', -1)" class="w-7 h-7 border border-cream-border text-brown-mid hover:border-brown hover:text-brown transition-colors leading-none text-sm">−</button>
                 <span class="text-sm w-5 text-center tabular-nums price">${qty}</span>
                 <button onclick="AM22.changeQty('${id}', 1)" class="w-7 h-7 border border-cream-border text-brown-mid hover:border-brown hover:text-brown transition-colors leading-none text-sm">+</button>
               </div>
-              <span class="text-sm tracking-wider price text-brown">${money(lineTotal)}</span>
+              <span class="text-sm tracking-wider price text-brown ml-4">${money(lineTotal)}</span>
             </div>
           </div>
           <button onclick="AM22.removeFromCart('${id}')" class="text-[10px] tracking-[0.24em] uppercase text-brown-pale hover:text-brown transition-colors mt-0.5 shrink-0">${t("remove")}</button>
