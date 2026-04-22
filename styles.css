@@ -6,6 +6,15 @@
 
 html {
   scroll-behavior: smooth;
+  /* Site-wide text scale — nudges every rem-based size up ~12.5% for better
+     readability (16px → 18px baseline). Layout untouched because paddings
+     and gaps also scale, preserving the minimalist proportions. */
+  font-size: 112.5%;
+}
+@media (max-width: 640px) {
+  html {
+    font-size: 106.25%;  /* gentler scale on phones to avoid horizontal overflow */
+  }
 }
 
 body {
@@ -16,11 +25,11 @@ body {
   font-feature-settings: "lnum" 1;
 }
 
-/* Wordmark sizing */
+/* Wordmark sizing — bumped ~12% for stronger hero presence */
 .wordmark {
   font-family: 'Tenor Sans', sans-serif;
   font-weight: 400;
-  font-size: clamp(72px, 14vw, 160px);
+  font-size: clamp(80px, 15.5vw, 180px);
   letter-spacing: 0.28em;
   line-height: 1;
   color: #2C2416;
@@ -33,11 +42,11 @@ body {
   letter-spacing: 0.28em;
 }
 
-/* Language switcher */
+/* Language switcher — bumped to 12.5px for readability */
 .lang-btn {
   font-family: 'Cormorant Garamond', 'Noto Serif TC', Georgia, serif;
   font-weight: 300;
-  font-size: 11px;
+  font-size: 12.5px;
   letter-spacing: 0.22em;
   text-transform: uppercase;
   color: #A08060;
@@ -137,17 +146,16 @@ a:focus-visible {
    MOBILE OPTIMIZATIONS
    ============================ */
 
-/* Small-phone wordmark (≤ 640px) — shrink & tighten so 4 chars + 3 gaps fit
-   inside even a 320px viewport with 24px side padding. */
+/* Small-phone wordmark (≤ 640px) — bumped ~12% but still safely fits 320px */
 @media (max-width: 640px) {
   .wordmark {
-    font-size: clamp(54px, 16vw, 88px);
+    font-size: clamp(60px, 17vw, 98px);
     letter-spacing: 0.18em;
   }
 }
 @media (max-width: 360px) {
   .wordmark {
-    font-size: 48px;
+    font-size: 54px;
     letter-spacing: 0.16em;
   }
 }

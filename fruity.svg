@@ -41,8 +41,8 @@
   <!-- Product text -->
   <text x="160" y="136" text-anchor="middle" font-family="'Cormorant Garamond', Georgia, serif" font-size="7" font-weight="300" fill="#B8909A" letter-spacing="2.5">FRUITY &amp; FLORAL</text>
 
-  <!-- AM22 wordmark at bottom of bag -->
-  <text x="160" y="208" text-anchor="middle" font-family="'Cormorant Garamond', Georgia, serif" font-size="6.5" font-weight="300" fill="#B8909A" letter-spacing="4" opacity="0.7">AM22</text>
+  <!-- AM22 wordmark at bottom of bag — darker + bolder for readability -->
+  <text x="160" y="210" text-anchor="middle" font-family="'Cormorant Garamond', Georgia, serif" font-size="8.5" font-weight="600" fill="#2C2416" letter-spacing="4">AM22</text>
 
   <!-- Corner accent dots -->
   <circle cx="115" cy="95" r="1.5" fill="#B8909A" opacity="0.4"/>

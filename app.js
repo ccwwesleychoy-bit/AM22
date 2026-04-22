@@ -13,14 +13,14 @@
       nameKey: "p1Name",
       subKey:  "p1Sub",
       price:   120,
-      image:   "images/nutty.svg",
+      image:   "nutty.svg",
     },
     fruity: {
       id: "fruity",
       nameKey: "p2Name",
       subKey:  "p2Sub",
       price:   150,
-      image:   "images/fruity.svg",
+      image:   "fruity.svg",
     },
   };
 
