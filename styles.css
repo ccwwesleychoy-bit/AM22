@@ -1,0 +1,324 @@
+@import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300;1,400&family=Noto+Serif+TC:wght@300;400&display=swap');
+
+*, *::before, *::after {
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  font-family: 'Cormorant Garamond', 'Noto Serif TC', Georgia, serif;
+  font-weight: 300;
+  -webkit-font-smoothing: antialiased;
+  font-variant-numeric: lining-nums;
+  font-feature-settings: "lnum" 1;
+}
+
+/* Wordmark sizing */
+.wordmark {
+  font-family: 'Tenor Sans', sans-serif;
+  font-weight: 400;
+  font-size: clamp(72px, 14vw, 160px);
+  letter-spacing: 0.28em;
+  line-height: 1;
+  color: #2C2416;
+}
+
+/* Nav + footer logo — Tenor Sans */
+.logo-text {
+  font-family: 'Tenor Sans', sans-serif;
+  font-weight: 400;
+  letter-spacing: 0.28em;
+}
+
+/* Language switcher */
+.lang-btn {
+  font-family: 'Cormorant Garamond', 'Noto Serif TC', Georgia, serif;
+  font-weight: 300;
+  font-size: 11px;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: #A08060;
+  cursor: pointer;
+  background: none;
+  border: none;
+  padding: 0;
+  transition: color 0.2s;
+}
+
+.lang-btn.active {
+  color: #2C2416;
+}
+
+.lang-btn:hover {
+  color: #2C2416;
+}
+
+/* Scroll indicator */
+.scroll-line {
+  width: 1px;
+  height: 48px;
+  background: linear-gradient(to bottom, transparent, #A08060);
+  animation: scrollFade 2s ease-in-out infinite;
+}
+
+@keyframes scrollFade {
+  0%, 100% { opacity: 0.3; transform: scaleY(0.6); transform-origin: top; }
+  50% { opacity: 1; transform: scaleY(1); }
+}
+
+/* Cart drawer transition */
+#cart-drawer {
+  transition: transform 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Smooth image hover (desktop / pointer devices only — avoids sticky-hover on touch) */
+@media (hover: hover) and (pointer: fine) {
+  article img {
+    transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+  article:hover img {
+    transform: scale(1.04);
+  }
+}
+
+/* Subtle product card hover */
+article .product-card-inner {
+  transition: background 0.3s;
+}
+
+/* Section spacing */
+section {
+  scroll-margin-top: 64px;
+}
+
+/* Story decorative numerals */
+.story-deco {
+  font-family: 'Tenor Sans', sans-serif;
+  font-weight: 400;
+  font-size: clamp(48px, 10vw, 100px);
+  letter-spacing: 0.22em;
+  line-height: 1;
+  color: #D9D0C1;
+  user-select: none;
+  pointer-events: none;
+}
+
+/* Pull quote */
+.pull-quote {
+  font-size: clamp(20px, 3vw, 32px);
+  font-weight: 300;
+  letter-spacing: 0.18em;
+  line-height: 1.6;
+  font-style: italic;
+}
+
+/* Button focus */
+button:focus-visible,
+a:focus-visible {
+  outline: 1px solid #2C2416;
+  outline-offset: 3px;
+}
+
+/* Cart overlay */
+#cart-overlay {
+  backdrop-filter: blur(2px);
+}
+
+/* Tabular figures for prices */
+.price {
+  font-variant-numeric: tabular-nums lining-nums;
+  font-feature-settings: "tnum" 1, "lnum" 1;
+}
+
+/* ============================
+   MOBILE OPTIMIZATIONS
+   ============================ */
+
+/* Small-phone wordmark (≤ 640px) — shrink & tighten so 4 chars + 3 gaps fit
+   inside even a 320px viewport with 24px side padding. */
+@media (max-width: 640px) {
+  .wordmark {
+    font-size: clamp(54px, 16vw, 88px);
+    letter-spacing: 0.18em;
+  }
+}
+@media (max-width: 360px) {
+  .wordmark {
+    font-size: 48px;
+    letter-spacing: 0.16em;
+  }
+}
+
+/* iOS Safari auto-zooms on any <input>/<textarea> with font-size < 16px.
+   Force 16px across ALL form fields inside the checkout so users don't get
+   kicked into zoom-view every time they tap a field. */
+@media (max-width: 640px) {
+  #checkout-modal input[type="text"],
+  #checkout-modal input[type="tel"],
+  #checkout-modal input[type="email"],
+  #checkout-modal input:not([type]),
+  #checkout-modal textarea {
+    font-size: 16px;
+  }
+}
+
+/* Use 100svh (small viewport height) on mobile to prevent the hero
+   from jumping when the iOS/Android URL bar collapses. Falls back to
+   min-h-screen (Tailwind) if unsupported. */
+@supports (min-height: 100svh) {
+  section#home {
+    min-height: 100svh;
+  }
+}
+
+/* Scroll-margin accounts for fixed 64px header — make anchor links land
+   with comfortable breathing room on mobile. */
+section {
+  scroll-margin-top: 80px;
+}
+
+/* Tighter section padding on mobile — py-24 (96px) is overkill on phones */
+@media (max-width: 640px) {
+  #shop, #story {
+    padding-top: 64px;
+    padding-bottom: 64px;
+  }
+  /* Story: reduce the huge gap between AM22 logo column and text column */
+  #story .grid { gap: 2.5rem !important; margin-top: 2.5rem !important; }
+  #home .scroll-line { display: none; } /* hide decorative scroll cue on mobile to avoid overlap */
+}
+
+/* Language buttons — make the hit area 44×44 (Apple HIG minimum) without
+   changing the visual size of the text. */
+.lang-btn {
+  padding: 10px 6px;
+  min-height: 44px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Cart icon button — ensure 44px min touch area */
+header nav button[aria-label="Cart"] {
+  min-height: 44px;
+  min-width: 44px;
+}
+
+/* Cart drawer: quantity +/− buttons need to be tappable */
+#cart-items button {
+  min-width: 36px;
+  min-height: 36px;
+  font-size: 16px;
+}
+
+/* Add-to-cart buttons — on very narrow screens, let text wrap gracefully
+   instead of bleeding out of the button */
+@media (max-width: 400px) {
+  section#shop .grid.grid-cols-2 button {
+    letter-spacing: 0.18em;
+    font-size: 10px;
+    padding-left: 8px;
+    padding-right: 8px;
+  }
+}
+
+/* Mobile nav: show Shop / Story links below the header on small screens
+   so users aren't forced to scroll to find sections. */
+@media (max-width: 767px) {
+  .mobile-nav-links {
+    display: flex !important;
+  }
+}
+
+/* Footer stacks nicely on mobile — keep contact info readable */
+@media (max-width: 640px) {
+  footer nav {
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 0.75rem 1.25rem;
+  }
+  footer nav span:first-of-type { display: none; } /* hide · separator when wrapping */
+}
+
+/* Checkout modal on mobile — full-height sheet feel, large submit button */
+@media (max-width: 767px) {
+  #checkout-modal #checkout-body { padding: 1.5rem 1.25rem 2rem; }
+  #checkout-modal #btn-submit-order { padding-top: 18px; padding-bottom: 18px; }
+  #checkout-modal .sticky { box-shadow: 0 1px 0 rgba(44, 36, 22, 0.06); }
+}
+
+/* Checkout modal header — ensure always visible, not masked by iOS address bar */
+#checkout-modal {
+  /* isolate creates a new stacking context, prevents fixed elements from bleeding */
+  isolation: isolate;
+}
+
+/* Hero tagline — Chinese gets its own voice: clean sans, no italic */
+html[lang="zh-Hant"] [data-i18n="heroTagline"] {
+  font-family: 'Noto Sans TC', 'PingFang TC', 'Microsoft JhengHei', sans-serif;
+  font-weight: 300;
+  font-style: normal;
+  font-size: clamp(18px, 3.2vw, 26px);
+  letter-spacing: 0.08em;
+}
+
+/* Hero layout — 4 evenly spaced parts, AM22 stays anchored across languages.
+   Structure:
+     [eyebrow]   ──┐
+     [AM22]        │  consistent gap between each
+     [tagline +    │  (tagline group is 1 visual block — its two lines
+      sub]         │   sit close together, but the group as a whole
+     [CTA]       ──┘   gets the same gap as the others)
+*/
+.hero-stack {
+  gap: clamp(2rem, 6vh, 3.5rem);
+}
+.hero-tagline-group {
+  gap: 0.5rem;
+}
+
+/* Reserve a minimum height in each slot so switching EN ↔ 中文 doesn't
+   shift the wordmark. Heights fit the larger of the two languages. */
+#home [data-i18n="heroEyebrow"] {
+  min-height: 1.25em;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+#home [data-i18n="heroTagline"] {
+  min-height: 3.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+#home [data-i18n="heroSub"] {
+  min-height: 1.75rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+@media (min-width: 768px) {
+  #home [data-i18n="heroTagline"] { min-height: 4rem; }
+  #home [data-i18n="heroSub"]     { min-height: 2rem; }
+}
+
+/* Checkout modal: lock background scroll, keep modal scrollable */
+body.checkout-open {
+  overflow: hidden;
+}
+
+/* Form input autofill — keep the cream look on Chrome */
+input:-webkit-autofill,
+textarea:-webkit-autofill {
+  -webkit-box-shadow: 0 0 0 1000px #F5F0E8 inset;
+  -webkit-text-fill-color: #2C2416;
+  caret-color: #2C2416;
+}
+
+/* Checkout summary pre-block stays in brand serif */
+#checkout-summary {
+  font-family: 'Cormorant Garamond', 'Noto Serif TC', Georgia, serif;
+}

@@ -1,0 +1,375 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>AM22 — Morning Ritual</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300;1,400&family=Noto+Serif+TC:wght@300;400&family=Noto+Sans+TC:wght@300;400&family=Tenor+Sans&display=swap" rel="stylesheet" />
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            cream:         '#F5F0E8',
+            'cream-dark':  '#EDE8DF',
+            'cream-deep':  '#E2D9CC',
+            'cream-border':'#D9D0C1',
+            brown:         '#2C2416',
+            'brown-mid':   '#6B5540',
+            'brown-light': '#A08060',
+            'brown-pale':  '#C4B89E',
+            amber:         '#C4924A',
+            blush:         '#B8909A',
+          },
+          fontFamily: {
+            serif: ['Cormorant Garamond', 'Noto Serif TC', 'Georgia', 'serif'],
+          },
+        }
+      }
+    }
+  </script>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body class="bg-cream text-brown font-serif">
+
+  <!-- CART OVERLAY -->
+  <div id="cart-overlay" class="fixed inset-0 bg-brown/20 z-40 hidden"></div>
+
+  <!-- CART DRAWER -->
+  <aside id="cart-drawer" class="fixed top-0 right-0 h-[100dvh] w-full max-w-md bg-cream z-50 translate-x-full flex flex-col shadow-2xl">
+    <div class="flex items-center justify-between px-8 py-6 border-b border-cream-border">
+      <h2 class="text-xs tracking-[0.28em] uppercase" data-i18n="cartTitle">Your Cart</h2>
+      <button onclick="AM22.closeCart()" class="text-xs tracking-[0.22em] uppercase text-brown-light hover:text-brown transition-colors" data-i18n="cartClose">Close</button>
+    </div>
+
+    <div id="cart-items" class="flex-1 overflow-y-auto px-8 py-2"></div>
+
+    <div class="px-8 py-6 border-t border-cream-border">
+
+      <!-- Free shipping progress -->
+      <div id="cart-progress" class="hidden mb-5">
+        <div class="h-px w-full bg-cream-border overflow-hidden">
+          <div id="cart-progress-fill" class="h-full bg-brown transition-all duration-500" style="width:0%"></div>
+        </div>
+        <p id="cart-progress-text" class="mt-3 text-[11px] tracking-[0.22em] uppercase text-brown-light text-center"></p>
+      </div>
+
+      <!-- Totals -->
+      <div class="space-y-2 mb-6">
+        <div class="flex justify-between items-baseline">
+          <span class="text-[11px] tracking-[0.22em] uppercase text-brown-light" data-i18n="cartSubtotal">Subtotal</span>
+          <span id="cart-subtotal" class="text-sm tracking-wider price text-brown-mid">HK$0</span>
+        </div>
+        <div class="flex justify-between items-baseline">
+          <span class="text-[11px] tracking-[0.22em] uppercase text-brown-light" data-i18n="cartShipping">Shipping</span>
+          <span id="cart-shipping" class="text-sm tracking-wider price text-brown-mid">—</span>
+        </div>
+        <div class="flex justify-between items-baseline pt-3 border-t border-cream-border">
+          <span class="text-xs tracking-[0.28em] uppercase" data-i18n="cartTotal">Total</span>
+          <span id="cart-total" class="text-lg tracking-wider price">HK$0</span>
+        </div>
+      </div>
+
+      <button id="btn-checkout" class="w-full py-3.5 border border-brown text-xs tracking-[0.28em] uppercase hover:bg-brown hover:text-cream transition-colors duration-300 disabled:opacity-30 disabled:cursor-not-allowed disabled:hover:bg-transparent disabled:hover:text-brown" data-i18n="checkout">Checkout</button>
+    </div>
+  </aside>
+
+  <!-- HEADER -->
+  <header class="fixed top-0 left-0 right-0 z-30 bg-cream/95 backdrop-blur-sm border-b border-cream-border">
+    <nav class="max-w-6xl mx-auto px-6 h-16 flex items-center justify-between">
+
+      <!-- Logo -->
+      <a href="#home" class="hover:opacity-70 transition-opacity logo-text text-base uppercase">AM22</a>
+
+      <!-- Nav links (desktop only — mobile uses subtle sub-bar below) -->
+      <div class="hidden md:flex items-center gap-10">
+        <a href="#shop" class="text-xs tracking-[0.22em] uppercase text-brown-mid hover:text-brown transition-colors" data-i18n="navShop">Shop</a>
+        <a href="#story" class="text-xs tracking-[0.22em] uppercase text-brown-mid hover:text-brown transition-colors" data-i18n="navStory">Our Story</a>
+      </div>
+
+      <!-- Language switcher + Cart -->
+      <div class="flex items-center gap-3 md:gap-6">
+        <div class="flex items-center gap-2">
+          <button class="lang-btn active" data-lang="en" onclick="setLang('en')">EN</button>
+          <span class="text-brown-pale text-xs select-none">/</span>
+          <button class="lang-btn" data-lang="zh-Hant" onclick="setLang('zh-Hant')">中文</button>
+        </div>
+        <button onclick="AM22.openCart()" class="relative flex items-center gap-2 text-xs tracking-[0.22em] uppercase text-brown-mid hover:text-brown transition-colors" aria-label="Cart">
+          <svg width="17" height="19" viewBox="0 0 17 19" fill="none" stroke="currentColor" stroke-width="1.1" stroke-linecap="round" stroke-linejoin="round">
+            <rect x="1" y="6" width="15" height="12" rx="1"/>
+            <path d="M5 6V4.5a3.5 3.5 0 0 1 7 0V6"/>
+          </svg>
+          <span id="cart-count-badge" class="hidden text-amber font-light">0</span>
+        </button>
+      </div>
+
+    </nav>
+  </header>
+
+  <main>
+
+    <!-- HERO -->
+    <section id="home" class="relative min-h-screen flex flex-col items-center justify-center text-center px-6 pt-16">
+      <div class="hero-stack max-w-2xl mx-auto w-full flex flex-col items-center">
+        <p class="text-xs tracking-[0.38em] uppercase text-brown-light" data-i18n="heroEyebrow">Morning Ritual</p>
+        <h1 class="wordmark">AM22</h1>
+        <div class="hero-tagline-group flex flex-col items-center w-full">
+          <p class="text-2xl md:text-3xl font-light italic tracking-[0.06em] leading-relaxed text-brown" data-i18n="heroTagline">Good Morning, Beautifully Simple.</p>
+          <p class="text-base text-brown-mid tracking-[0.04em] leading-relaxed" data-i18n="heroSub">Single-origin drip coffee, crafted for quiet mornings.</p>
+        </div>
+        <a href="#shop" class="inline-block border border-brown/60 px-12 py-3.5 text-xs tracking-[0.32em] uppercase hover:bg-brown hover:text-cream hover:border-brown transition-all duration-300" data-i18n="heroCta">Explore the Collection</a>
+      </div>
+      <div class="absolute bottom-10 left-1/2 -translate-x-1/2 flex flex-col items-center">
+        <div class="scroll-line"></div>
+      </div>
+    </section>
+
+    <!-- TRUST STRIP -->
+    <div class="border-t border-b border-cream-border py-7 bg-cream-dark/40">
+      <div class="max-w-5xl mx-auto px-6 grid grid-cols-2 md:grid-cols-4 gap-4 text-center">
+        <div><p class="text-xs tracking-[0.26em] uppercase text-brown-mid" data-i18n="trust1">Single Origin</p></div>
+        <div><p class="text-xs tracking-[0.26em] uppercase text-brown-mid" data-i18n="trust2">Freshly Roasted</p></div>
+        <div><p class="text-xs tracking-[0.26em] uppercase text-brown-mid" data-i18n="trust3">Ready in Minutes</p></div>
+        <div><p class="text-xs tracking-[0.26em] uppercase text-brown-mid" data-i18n="trust4">Sealed Fresh</p></div>
+      </div>
+    </div>
+
+    <!-- SHOP -->
+    <section id="shop" class="py-24 px-6">
+      <div class="max-w-5xl mx-auto">
+
+        <div class="border-b border-cream-border pb-4 mb-16">
+          <h2 class="text-xs tracking-[0.28em] uppercase" data-i18n="shopTitle">Selections</h2>
+        </div>
+
+        <!-- Product cards -->
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-16 mb-10">
+
+          <!-- Product 1: Nutty -->
+          <article>
+            <div class="bg-cream-dark aspect-[3/2] flex items-center justify-center mb-8 overflow-hidden">
+              <img src="images/nutty.svg" alt="Nutty Drip Bag" class="w-44 h-44 object-contain" />
+            </div>
+            <div class="border-t border-cream-border pt-6">
+              <div class="flex items-start justify-between mb-2">
+                <div>
+                  <h3 class="text-xl tracking-[0.06em]" data-i18n="p1Name">Nutty Drip Bag</h3>
+                  <p class="text-xs tracking-[0.24em] uppercase text-brown-light mt-1.5" data-i18n="p1Sub">Single Origin · 10 Packs</p>
+                </div>
+                <span class="text-lg tracking-wider price" data-i18n="p1Price">HK$120</span>
+              </div>
+              <p class="text-sm text-brown-mid leading-[1.85] tracking-[0.025em] mt-4" data-i18n="p1Desc1">Warm, rounded, and smooth.</p>
+              <p class="text-sm text-brown-mid leading-[1.85] tracking-[0.025em]" data-i18n="p1Desc2">Notes of hazelnut and milk chocolate with a lingering caramel finish.</p>
+            </div>
+          </article>
+
+          <!-- Product 2: Fruity & Floral -->
+          <article>
+            <div class="bg-cream-dark aspect-[3/2] flex items-center justify-center mb-8 overflow-hidden">
+              <img src="images/fruity.svg" alt="Fruity and Floral Drip Bag" class="w-44 h-44 object-contain" />
+            </div>
+            <div class="border-t border-cream-border pt-6">
+              <div class="flex items-start justify-between mb-2">
+                <div>
+                  <h3 class="text-xl tracking-[0.06em]" data-i18n="p2Name">Fruity &amp; Floral Drip Bag</h3>
+                  <p class="text-xs tracking-[0.24em] uppercase text-brown-light mt-1.5" data-i18n="p2Sub">Single Origin · 2 Varieties · 10 Packs Total</p>
+                </div>
+                <span class="text-lg tracking-wider price" data-i18n="p2Price">HK$150</span>
+              </div>
+              <p class="text-sm text-brown-mid leading-[1.85] tracking-[0.025em] mt-4" data-i18n="p2Desc1">Bright and aromatic.</p>
+              <p class="text-sm text-brown-mid leading-[1.85] tracking-[0.025em]" data-i18n="p2Desc2">Notes of stone fruit, jasmine, and a whisper of bergamot.</p>
+            </div>
+          </article>
+
+        </div>
+
+        <!-- Add to Cart buttons -->
+        <div class="grid grid-cols-2 gap-4 md:gap-16 mt-2">
+          <button onclick="AM22.addToCart('nutty')"  class="py-3.5 border border-brown/50 text-xs tracking-[0.28em] uppercase hover:bg-brown hover:text-cream hover:border-brown transition-all duration-300" data-i18n="addToCart">Add to Cart</button>
+          <button onclick="AM22.addToCart('fruity')" class="py-3.5 border border-brown/50 text-xs tracking-[0.28em] uppercase hover:bg-brown hover:text-cream hover:border-brown transition-all duration-300" data-i18n="addToCart">Add to Cart</button>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- BRAND STORY -->
+    <section id="story" class="py-24 px-6 border-t border-cream-border bg-cream-dark/30">
+      <div class="max-w-5xl mx-auto">
+
+        <div class="border-b border-cream-border pb-4 mb-4">
+          <h2 class="text-xs tracking-[0.28em] uppercase" data-i18n="storyTitle">Our Story</h2>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-20 mt-16 items-center">
+
+          <div class="flex items-center justify-center">
+            <div class="text-center select-none">
+              <div class="logo-text text-4xl uppercase tracking-[0.28em]">AM22</div>
+              <div class="w-12 h-px bg-cream-border mx-auto mt-8"></div>
+              <p class="text-xs tracking-[0.32em] uppercase text-brown-pale mt-4">Est. 2026</p>
+            </div>
+          </div>
+
+          <div>
+            <p class="text-base text-brown-mid leading-[1.95] tracking-[0.025em] mb-6" data-i18n="story1">AM — the morning hour. 22 — in Chinese, sound '2' simply means ease. Together, AM22 is a morning promise: one bag, one cup, one good start.</p>
+            <p class="text-base text-brown-mid leading-[1.95] tracking-[0.025em] mb-6" data-i18n="story2">We source only the finest single-origin beans, roasted with care and sealed fresh into each drip bag.</p>
+            <p class="text-base text-brown-mid leading-[1.95] tracking-[0.025em]" data-i18n="story3">Every morning deserves a ritual. Every ritual deserves AM22.</p>
+          </div>
+
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- FOOTER -->
+  <footer class="border-t border-cream-border py-14 px-6">
+    <div class="max-w-5xl mx-auto flex flex-col md:flex-row items-center justify-between gap-8">
+
+      <div class="text-center md:text-left">
+        <p class="logo-text text-base uppercase mb-2">AM22</p>
+        <p class="text-xs tracking-[0.14em] text-brown-pale" data-i18n="footerPolicy">Quality guaranteed on every pack.</p>
+      </div>
+
+      <nav class="flex flex-col md:flex-row items-center gap-4 md:gap-10 text-xs tracking-[0.22em] uppercase">
+        <a href="#shop"  class="text-brown-mid hover:text-brown transition-colors" data-i18n="navShop">Shop</a>
+        <a href="#story" class="text-brown-mid hover:text-brown transition-colors" data-i18n="navStory">Our Story</a>
+        <span class="text-brown-pale">·</span>
+        <span id="contact-phone" class="text-brown-mid tabular-nums"></span>
+        <a id="contact-email" href="#" class="text-brown-mid hover:text-brown transition-colors normal-case tracking-[0.04em]"></a>
+      </nav>
+
+      <p class="text-xs tracking-[0.12em] text-brown-pale" data-i18n="footerRights">© 2026 AM22. All rights reserved.</p>
+
+    </div>
+  </footer>
+
+  <!-- =================== CHECKOUT MODAL =================== -->
+  <div id="checkout-modal" class="fixed inset-0 z-[100] hidden">
+    <div id="checkout-backdrop" class="absolute inset-0 bg-brown/40 backdrop-blur-[2px]"></div>
+
+    <div class="absolute inset-0 overflow-y-auto">
+      <div class="min-h-full flex items-start md:items-center justify-center p-0 md:p-6">
+        <div class="relative w-full md:max-w-xl bg-cream md:border md:border-cream-border shadow-2xl">
+
+          <!-- Header -->
+          <div class="sticky top-0 z-10 flex items-center justify-between px-7 py-5 border-b border-cream-border bg-cream">
+            <div class="text-xs tracking-[0.28em] uppercase" data-i18n="chkTitle">Checkout</div>
+            <button onclick="AM22.closeCheckout()" class="text-[11px] tracking-[0.22em] uppercase text-brown-light hover:text-brown transition-colors" data-i18n="cartClose">Close</button>
+          </div>
+
+          <!-- Body (form view) -->
+          <div id="checkout-body" class="p-7">
+
+            <!-- Order Summary -->
+            <div class="border-b border-cream-border pb-6 mb-6">
+              <div class="text-[11px] tracking-[0.22em] uppercase text-brown-light mb-3" data-i18n="chkOrderSummary">Order Summary</div>
+              <pre id="checkout-summary" class="whitespace-pre-wrap text-sm leading-[1.85] text-brown-mid font-serif tracking-[0.02em]"></pre>
+            </div>
+
+            <!-- Order ID -->
+            <div class="mb-5">
+              <div class="text-[11px] tracking-[0.22em] uppercase text-brown-light" data-i18n="chkOrder">Order</div>
+              <div class="mt-2 flex items-center justify-between gap-4">
+                <div id="checkout-order-id" class="text-sm tracking-[0.05em] price text-brown"></div>
+                <button id="btn-copy-order-id" class="text-[11px] tracking-[0.22em] uppercase text-brown-light hover:text-brown transition-colors" data-i18n="copy">Copy</button>
+              </div>
+            </div>
+
+            <!-- Remark -->
+            <p class="text-xs tracking-[0.04em] leading-relaxed text-brown-mid bg-cream-dark border border-cream-border px-4 py-3 mb-6" data-i18n="chkRemark">Please include the Order ID in the transfer remark.</p>
+
+            <!-- Payment methods -->
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 mb-8">
+              <a id="payme-link" href="#" target="_blank" rel="noopener noreferrer" class="flex items-center justify-center border border-brown/50 px-4 py-4 text-xs tracking-[0.28em] uppercase text-brown hover:bg-brown hover:text-cream transition-colors" data-i18n="chkPayMe">Pay with PayMe</a>
+              <div class="border border-cream-border bg-cream-dark/50 px-4 py-3">
+                <div class="text-[11px] tracking-[0.22em] uppercase text-brown-light" data-i18n="chkFps">FPS</div>
+                <div class="mt-1.5 flex items-center justify-between gap-4">
+                  <div id="fps-id" class="text-sm tracking-[0.05em] price text-brown"></div>
+                  <button id="btn-copy-fps" class="text-[11px] tracking-[0.22em] uppercase text-brown-light hover:text-brown transition-colors" data-i18n="copy">Copy</button>
+                </div>
+              </div>
+            </div>
+
+            <!-- Form -->
+            <div class="text-[11px] tracking-[0.22em] uppercase text-brown-light mb-4" data-i18n="chkYourDetails">Your Details</div>
+
+            <form id="form-order" class="space-y-5">
+              <input type="hidden" id="order-id-field"      name="order_id"      value="" />
+              <input type="hidden" id="order-summary-field" name="order_summary" value="" />
+
+              <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <label class="block">
+                  <span class="block text-[11px] tracking-[0.22em] uppercase text-brown-light" data-i18n="formName">Name</span>
+                  <input name="name" required class="mt-2 w-full bg-transparent border-b border-cream-border focus:border-brown outline-none px-0 py-2.5 text-sm text-brown transition-colors" />
+                </label>
+                <label class="block">
+                  <span class="block text-[11px] tracking-[0.22em] uppercase text-brown-light" data-i18n="formPhone">Phone / WhatsApp</span>
+                  <input name="phone" required inputmode="tel" class="mt-2 w-full bg-transparent border-b border-cream-border focus:border-brown outline-none px-0 py-2.5 text-sm text-brown transition-colors" />
+                </label>
+              </div>
+
+              <label class="block">
+                <span class="block text-[11px] tracking-[0.22em] uppercase text-brown-light" data-i18n="formAddress">Shipping Address</span>
+                <textarea name="address" required rows="2" class="mt-2 w-full bg-transparent border-b border-cream-border focus:border-brown outline-none px-0 py-2.5 text-sm text-brown transition-colors resize-none"></textarea>
+              </label>
+
+              <label class="block">
+                <span class="block text-[11px] tracking-[0.22em] uppercase text-brown-light" data-i18n="formEmail">Email (optional)</span>
+                <input name="email" type="email" inputmode="email" autocomplete="email" class="mt-2 w-full bg-transparent border-b border-cream-border focus:border-brown outline-none px-0 py-2.5 text-sm text-brown transition-colors" />
+              </label>
+
+              <!-- Payment proof upload -->
+              <div class="border border-cream-border bg-cream-dark/40 px-5 py-5 mt-2">
+                <div class="text-[11px] tracking-[0.22em] uppercase text-brown-light" data-i18n="formPayCap">Payment Screenshot</div>
+                <p class="mt-2 text-xs leading-relaxed text-brown-mid" data-i18n="formPayHelp">After paying by PayMe or FPS, upload your screenshot here. Required.</p>
+
+                <input id="payment-proof-input" type="file" accept="image/jpeg,image/png,image/webp,.jpg,.jpeg,.png,.webp" class="sr-only" tabindex="-1" aria-hidden="true" />
+
+                <div class="mt-4 flex flex-wrap items-center gap-2">
+                  <button id="btn-payment-proof-pick" type="button" class="border border-brown/50 px-4 py-2.5 text-[11px] tracking-[0.22em] uppercase text-brown hover:bg-brown hover:text-cream transition-colors" data-i18n="formChooseImg">Choose Image</button>
+                  <button id="btn-payment-proof-clear" type="button" class="hidden border border-cream-border px-4 py-2.5 text-[11px] tracking-[0.22em] uppercase text-brown-light hover:text-brown hover:border-brown transition-colors" data-i18n="formRemove">Remove</button>
+                </div>
+
+                <p id="payment-proof-filename" class="mt-3 hidden text-[11px] tracking-[0.04em] text-brown-light"></p>
+                <p id="payment-proof-error" class="mt-3 hidden text-[11px] tracking-[0.04em] text-[#b15a5a]"></p>
+
+                <div id="payment-proof-preview-wrap" class="mt-4 hidden">
+                  <div class="text-[10px] tracking-[0.22em] uppercase text-brown-light mb-2" data-i18n="formPreview">Preview</div>
+                  <img id="payment-proof-preview" alt="" class="max-h-52 w-auto max-w-full border border-cream-border object-contain bg-cream" />
+                </div>
+              </div>
+
+              <button id="btn-submit-order" type="submit" class="w-full mt-3 py-4 bg-brown text-cream text-xs tracking-[0.32em] uppercase hover:bg-brown-mid transition-colors disabled:opacity-40 disabled:cursor-not-allowed" data-i18n="formSubmit">Submit Order</button>
+              <p class="text-center text-[10px] tracking-[0.22em] uppercase text-brown-pale" data-i18n="formTrust">Encrypted · No card stored</p>
+            </form>
+          </div>
+
+          <!-- Success state -->
+          <div id="checkout-success" class="hidden p-10 text-center">
+            <svg viewBox="0 0 40 40" class="mx-auto h-14 w-14 text-brown" aria-hidden="true">
+              <circle cx="20" cy="20" r="15" stroke="currentColor" stroke-width="0.8" fill="none"/>
+              <path d="M 13 20 L 18 25 L 27 15" stroke="currentColor" stroke-width="1.2" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+            <div class="mt-6 logo-text text-3xl uppercase tracking-[0.28em]" data-i18n="successTitle">Thank you</div>
+            <div class="mt-3 text-[11px] tracking-[0.28em] uppercase text-brown-light" data-i18n="successSub">Your order is received</div>
+            <p class="mt-6 max-w-sm mx-auto text-sm leading-[1.85] text-brown-mid italic" data-i18n="successBody">We'll confirm your order by WhatsApp or email shortly. Pour slow, sip slow.</p>
+            <div class="mt-8 text-[11px] tracking-[0.22em] uppercase text-brown-light">
+              <span data-i18n="chkOrder">Order</span> · <span id="success-order-id" class="price text-brown"></span>
+            </div>
+            <button onclick="AM22.closeCheckout()" class="mt-10 border border-brown/50 px-10 py-3 text-[11px] tracking-[0.28em] uppercase text-brown hover:bg-brown hover:text-cream transition-colors" data-i18n="successClose">Close</button>
+          </div>
+
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="config.js"></script>
+  <script src="i18n.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
