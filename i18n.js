@@ -114,7 +114,7 @@ const STR = {
     copied:       "已複製",
 
     heroEyebrow: "朝早一包",
-    heroTagline: "係同一個AM你絕對會想飲TWICE既咖啡！",
+    heroTagline: "係同一個AM你絕對會想飲TWICE既咖啡",
     heroSub:     "",
     heroCta:     "探索精選系列",
     trust1:      "單品產地",
