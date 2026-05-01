@@ -52,6 +52,9 @@ const STR = {
     story2:      "We source the finest single-origin beans, roasted with care and sealed fresh into each drip bag.",
     story3:      "Every morning deserves a ritual. Every ritual deserves AM22.",
     storyQuote:  "Simple. Pure. AM22.",
+    collabTitle: "Collaboration",
+    collabEyebrow:"Wholesale · Cafe · Gifting",
+    collabBody:  "Wholesale, cafe, office, and gifting enquiries are welcome. For cooperation opportunities, please contact us by email or phone.",
 
     // Footer
     footerPolicy:"Quality guaranteed on every pack.",
@@ -116,7 +119,7 @@ const STR = {
     copied:       "已複製",
 
     heroEyebrow: "朝早一包",
-    heroTagline: "係同一個AM你絕對會想飲TWICE既咖啡",
+    heroTagline: "一包一杯，成就更好的早晨",
     heroSub:     "",
     heroCta:     "探索精選系列",
     trust1:      "單品產地",
@@ -143,6 +146,9 @@ const STR = {
     story2:      "我們精選最優質的單品產地咖啡豆，用心烘焙後新鮮封裝於每一個掛耳包之中。",
     story3:      "每個早晨都值得一個儀式。每個儀式，都值得 AM22。",
     storyQuote:  "簡單。純粹。AM22。",
+    collabTitle: "合作洽談",
+    collabEyebrow:"批發 · 咖啡店 · 禮品合作",
+    collabBody:  "歡迎批發、咖啡店、辦公室及禮品合作查詢。如有合作意向，歡迎透過電郵或電話聯絡我們。",
 
     footerPolicy:"每一包均保證品質。",
     footerRights:"© 2026 AM22。版權所有。",

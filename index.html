@@ -326,6 +326,42 @@
     #checkout-summary {
       font-family: 'Cormorant Garamond', 'Noto Serif TC', Georgia, serif;
     }
+
+    /* Typography polish — improve readability while keeping the warm palette. */
+    .text-brown-mid { color: #594737 !important; }
+    .text-brown-light { color: #7A614A !important; }
+    .text-brown-pale { color: #9A8B74 !important; }
+
+    main p {
+      text-wrap: pretty;
+    }
+
+    footer nav,
+    #collaboration a {
+      color: #594737;
+    }
+
+    #collaboration [data-i18n="collabEyebrow"],
+    footer [data-i18n="footerPolicy"] {
+      color: #7A614A;
+    }
+
+    html[lang="zh-Hant"] [data-i18n]:not(.wordmark):not(.logo-text) {
+      letter-spacing: 0.06em !important;
+    }
+
+    html[lang="zh-Hant"] h2[data-i18n],
+    html[lang="zh-Hant"] .lang-btn,
+    html[lang="zh-Hant"] button[data-i18n],
+    html[lang="zh-Hant"] a[data-i18n] {
+      letter-spacing: 0.12em !important;
+    }
+
+    html[lang="zh-Hant"] p[data-i18n],
+    html[lang="zh-Hant"] #collaboration a,
+    html[lang="zh-Hant"] footer nav {
+      line-height: 1.9;
+    }
   </style>
 </head>
 <body class="bg-cream text-brown font-serif" translate="no">
@@ -514,6 +550,34 @@
       </div>
     </section>
 
+    <!-- COLLABORATION -->
+    <section id="collaboration" class="py-24 px-6 border-t border-cream-border">
+      <div class="max-w-5xl mx-auto">
+
+        <div class="border-b border-cream-border pb-4 mb-4">
+          <h2 class="text-xs tracking-[0.28em] uppercase" data-i18n="collabTitle">Collaboration</h2>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-20 mt-16 items-start">
+
+          <div>
+            <p class="text-xs tracking-[0.32em] uppercase text-brown-pale" data-i18n="collabEyebrow">Wholesale · Cafe · Gifting</p>
+            <div class="w-12 h-px bg-cream-border mt-8"></div>
+          </div>
+
+          <div>
+            <p class="text-base text-brown-mid leading-[1.95] tracking-[0.025em]" data-i18n="collabBody">Wholesale, cafe, office, and gifting enquiries are welcome. For cooperation opportunities, please contact us by email or phone.</p>
+            <div class="mt-8 flex flex-col sm:flex-row sm:items-center gap-3 sm:gap-5 text-xs tracking-[0.16em] text-brown-mid">
+              <a href="mailto:AM22coffee@gmail.com" class="hover:text-brown transition-colors">AM22coffee@gmail.com</a>
+              <span class="hidden sm:inline text-brown-pale">·</span>
+              <a href="https://wa.me/85290137619" target="_blank" rel="noopener noreferrer" class="hover:text-brown transition-colors price" aria-label="Contact AM22 on WhatsApp">9013 7619</a>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </section>
+
   </main>
 
   <!-- FOOTER -->
@@ -529,7 +593,7 @@
         <a href="#shop"  class="text-brown-mid hover:text-brown transition-colors" data-i18n="navShop">Shop</a>
         <a href="#story" class="text-brown-mid hover:text-brown transition-colors" data-i18n="navStory">Our Story</a>
         <span class="text-brown-pale">·</span>
-        <span id="contact-phone" class="text-brown-mid tabular-nums"></span>
+        <a id="contact-phone" href="https://wa.me/85290137619" target="_blank" rel="noopener noreferrer" class="text-brown-mid hover:text-brown transition-colors tabular-nums" aria-label="Contact AM22 on WhatsApp"></a>
         <a id="contact-email" href="#" class="text-brown-mid hover:text-brown transition-colors normal-case tracking-[0.04em]"></a>
       </nav>
 

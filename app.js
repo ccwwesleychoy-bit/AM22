@@ -540,7 +540,11 @@
   }
   function renderContactInfo() {
     const phoneEl = $("contact-phone");
-    if (phoneEl) phoneEl.textContent = contactPhoneDisplay(cfg.contactPhone);
+    if (phoneEl) {
+      const phoneDigits = String(cfg.contactPhone || "").replace(/\D/g, "");
+      phoneEl.textContent = contactPhoneDisplay(cfg.contactPhone);
+      if (phoneDigits) phoneEl.setAttribute("href", "https://wa.me/852" + phoneDigits);
+    }
     const emailEl = $("contact-email");
     if (emailEl) {
       const em = String(cfg.contactEmail || "").trim();

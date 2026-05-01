@@ -17,5 +17,5 @@ window.SHOP_CONFIG = {
 
   // Google Apps Script Web App — receives order + payment proof image
   orderEndpoint:
-    "https://script.google.com/macros/s/AKfycbwp7jQ7Pkc-X0cZRqNSV24UuQiQ8Jz_Q342dT8JjrCiYT3UVYAUvQr3KalSVPV-K4Habw/exec",
+    "https://script.google.com/macros/s/AKfycbxfwD_P97LJmyBPr4hiVQwC1ZZf6i4rp8QpQME7ehZah3HhBLhSDWCcTQz6e_CweaIb-g/exec",
 };
