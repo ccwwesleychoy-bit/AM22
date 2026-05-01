@@ -79,8 +79,10 @@ const STR = {
     formFailed:     "Try Again",
     formTrust:      "Encrypted · No card stored",
     errImageBig:    "Image is too large. Please choose one under 12 MB.",
+    errImageType:   "Please choose a JPG, PNG, or WebP image.",
     errImageRead:   "Couldn't read that image. Please try another.",
     errNeedProof:   "Please upload your payment screenshot to continue.",
+    errSubmit:      "We couldn't send your order. Please check your connection and try again, or contact us directly.",
 
     // Success
     successTitle:   "Thank you",
@@ -166,8 +168,10 @@ const STR = {
     formFailed:     "重試",
     formTrust:      "加密傳輸 · 不儲存卡號",
     errImageBig:    "圖片太大，請選擇 12MB 以下的圖片。",
+    errImageType:   "請選擇 JPG、PNG 或 WebP 圖片。",
     errImageRead:   "無法讀取該圖片，請重新選擇。",
     errNeedProof:   "請上傳付款截圖以完成訂單。",
+    errSubmit:      "未能提交訂單。請檢查網絡後再試，或直接聯絡我們。",
 
     successTitle:   "感謝您",
     successSub:     "訂單已收到",

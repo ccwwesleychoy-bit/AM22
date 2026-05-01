@@ -33,6 +33,67 @@
 
   const $ = (id) => document.getElementById(id);
   const money = (n) => currency + Number(n || 0).toFixed(0);
+  const focusableSelector = [
+    "a[href]",
+    "button:not([disabled])",
+    "input:not([disabled]):not([type='hidden'])",
+    "textarea:not([disabled])",
+    "select:not([disabled])",
+    "[tabindex]:not([tabindex='-1'])",
+  ].join(",");
+  let lastCartTrigger = null;
+  let lastCheckoutTrigger = null;
+
+  function getFocusable(root) {
+    if (!root) return [];
+    return Array.from(root.querySelectorAll(focusableSelector))
+      .filter((el) => el.tabIndex >= 0 && (el.offsetParent !== null || el === document.activeElement));
+  }
+
+  function focusFirst(root) {
+    const focusables = getFocusable(root);
+    const target = focusables[0] || root;
+    if (target && target.focus) target.focus({ preventScroll: true });
+  }
+
+  function restoreFocus(el) {
+    if (el && typeof el.focus === "function" && document.contains(el)) {
+      el.focus({ preventScroll: true });
+    }
+  }
+
+  function trapFocus(e, root) {
+    if (e.key !== "Tab" || !root) return;
+    const focusables = getFocusable(root);
+    if (focusables.length === 0) {
+      e.preventDefault();
+      root.focus({ preventScroll: true });
+      return;
+    }
+    const first = focusables[0];
+    const last = focusables[focusables.length - 1];
+    if (e.shiftKey && document.activeElement === first) {
+      e.preventDefault();
+      last.focus({ preventScroll: true });
+    } else if (!e.shiftKey && document.activeElement === last) {
+      e.preventDefault();
+      first.focus({ preventScroll: true });
+    }
+  }
+
+  function setCartExpanded(expanded) {
+    const btn = $("btn-cart");
+    if (btn) btn.setAttribute("aria-expanded", expanded ? "true" : "false");
+  }
+
+  function setSubmitStatus(message, isError = true) {
+    const status = $("order-submit-status");
+    if (!status) return;
+    status.textContent = message || "";
+    status.classList.toggle("hidden", !message);
+    status.classList.toggle("text-[#b15a5a]", isError);
+    status.classList.toggle("text-brown-mid", !isError);
+  }
 
   // ---------- CART MATH ----------
   function subtotal() {
@@ -148,14 +209,14 @@
             <p class="text-[11px] tracking-[0.22em] uppercase text-brown-light mt-1">${t(p.subKey)}</p>
             <div class="flex items-center justify-between mt-3.5 gap-4">
               <div class="flex items-center gap-3 shrink-0">
-                <button onclick="AM22.changeQty('${id}', -1)" class="w-7 h-7 border border-cream-border text-brown-mid hover:border-brown hover:text-brown transition-colors leading-none text-sm">−</button>
-                <span class="text-sm w-5 text-center tabular-nums price">${qty}</span>
-                <button onclick="AM22.changeQty('${id}', 1)" class="w-7 h-7 border border-cream-border text-brown-mid hover:border-brown hover:text-brown transition-colors leading-none text-sm">+</button>
+                <button onclick="AM22.changeQty('${id}', -1)" class="w-7 h-7 border border-cream-border text-brown-mid hover:border-brown hover:text-brown transition-colors leading-none text-sm" aria-label="Decrease ${t(p.nameKey)} quantity">−</button>
+                <span class="text-sm w-5 text-center tabular-nums price" aria-live="polite">${qty}</span>
+                <button onclick="AM22.changeQty('${id}', 1)" class="w-7 h-7 border border-cream-border text-brown-mid hover:border-brown hover:text-brown transition-colors leading-none text-sm" aria-label="Increase ${t(p.nameKey)} quantity">+</button>
               </div>
               <span class="text-sm tracking-wider price text-brown ml-4">${money(lineTotal)}</span>
             </div>
           </div>
-          <button onclick="AM22.removeFromCart('${id}')" class="text-[10px] tracking-[0.24em] uppercase text-brown-pale hover:text-brown transition-colors mt-0.5 shrink-0">${t("remove")}</button>
+          <button onclick="AM22.removeFromCart('${id}')" class="text-[10px] tracking-[0.24em] uppercase text-brown-pale hover:text-brown transition-colors mt-0.5 shrink-0" aria-label="${t("remove")} ${t(p.nameKey)}">${t("remove")}</button>
         </div>`;
     });
     container.innerHTML = html;
@@ -163,16 +224,25 @@
 
   // ---------- DRAWER OPEN / CLOSE ----------
   function openCart() {
-    $("cart-drawer").classList.remove("translate-x-full");
-    $("cart-overlay").classList.remove("hidden");
+    const drawer = $("cart-drawer");
+    const overlay = $("cart-overlay");
+    lastCartTrigger = document.activeElement;
+    drawer.classList.remove("translate-x-full");
+    overlay.classList.remove("hidden");
+    setCartExpanded(true);
     document.body.style.overflow = "hidden";
+    requestAnimationFrame(() => focusFirst(drawer));
   }
-  function closeCart() {
-    $("cart-drawer").classList.add("translate-x-full");
-    $("cart-overlay").classList.add("hidden");
+  function closeCart(restore = true) {
+    const drawer = $("cart-drawer");
+    const overlay = $("cart-overlay");
+    drawer.classList.add("translate-x-full");
+    overlay.classList.add("hidden");
+    setCartExpanded(false);
     if (!document.body.classList.contains("checkout-open")) {
       document.body.style.overflow = "";
     }
+    if (restore) restoreFocus(lastCartTrigger || $("btn-cart"));
   }
 
   // ---------- ORDER ID ----------
@@ -214,9 +284,11 @@
   // ---------- CHECKOUT OPEN / CLOSE ----------
   function openCheckout() {
     if (Object.keys(state.cart).length === 0) return;
+    lastCheckoutTrigger = document.activeElement;
     state.orderId = genOrderId();
     state.paymentProof = null;
     resetPaymentProofUI();
+    setSubmitStatus("");
 
     $("checkout-order-id").textContent = state.orderId;
     $("success-order-id").textContent = state.orderId;
@@ -243,14 +315,18 @@
     document.body.classList.add("checkout-open");
     document.body.style.overflow = "hidden";
     // Close the drawer behind the modal
-    $("cart-drawer").classList.add("translate-x-full");
-    $("cart-overlay").classList.add("hidden");
+    closeCart(false);
+    requestAnimationFrame(() => focusFirst($("checkout-modal")));
   }
 
   function closeCheckout() {
     $("checkout-modal").classList.add("hidden");
     document.body.classList.remove("checkout-open");
     document.body.style.overflow = "";
+    setSubmitStatus("");
+    const drawer = $("cart-drawer");
+    const fallback = $("btn-cart");
+    restoreFocus(drawer && drawer.contains(lastCheckoutTrigger) ? fallback : (lastCheckoutTrigger || fallback));
   }
 
   // ---------- COPY ----------
@@ -352,6 +428,12 @@
       const file = input.files && input.files[0];
       if (!file) return;
       if (err) { err.textContent = ""; err.classList.add("hidden"); }
+      const allowedTypes = ["image/jpeg", "image/png", "image/webp"];
+      if (file.type && !allowedTypes.includes(file.type)) {
+        if (err) { err.textContent = t("errImageType"); err.classList.remove("hidden"); }
+        input.value = "";
+        return;
+      }
       if (file.size > 12 * 1024 * 1024) {
         if (err) { err.textContent = t("errImageBig"); err.classList.remove("hidden"); }
         input.value = "";
@@ -380,9 +462,19 @@
 
     const form = $("form-order");
     const err  = $("payment-proof-error");
+    setSubmitStatus("");
+
+    if (!cfg.orderEndpoint) {
+      setSubmitStatus(t("errSubmit"));
+      return;
+    }
+
+    const honeypot = form && form.querySelector('[name="website"]');
+    if (honeypot && honeypot.value) return;
 
     if (!state.paymentProof || !state.paymentProof.base64) {
       if (err) { err.textContent = t("errNeedProof"); err.classList.remove("hidden"); try { err.scrollIntoView({behavior:"smooth",block:"nearest"}); } catch(_) {} }
+      setSubmitStatus(t("errNeedProof"));
       return;
     }
 
@@ -404,12 +496,15 @@
       whatsapp: phone,
       address: (form.querySelector('[name="address"]') || {}).value || "",
       email:   (form.querySelector('[name="email"]')   || {}).value || "",
-      note:    (form.querySelector('[name="email"]')   || {}).value || "",
+      note:    "",
       summary: $("order-summary-field").value,
       paymentProofBase64:   state.paymentProof.base64,
       paymentProofMime:     state.paymentProof.mime,
       paymentProofFileName: state.paymentProof.name,
     };
+
+    const controller = window.AbortController ? new AbortController() : null;
+    const timeout = controller ? setTimeout(() => controller.abort(), 20000) : null;
 
     try {
       await fetch(cfg.orderEndpoint, {
@@ -417,14 +512,19 @@
         mode: "no-cors",
         headers: { "Content-Type": "text/plain;charset=utf-8" },
         body: JSON.stringify(payload),
+        signal: controller ? controller.signal : undefined,
       });
+      if (timeout) clearTimeout(timeout);
       // Success state
       $("checkout-body").classList.add("hidden");
       $("checkout-success").classList.remove("hidden");
+      requestAnimationFrame(() => focusFirst($("checkout-success")));
       state.cart = {};
       syncAll();
     } catch (e) {
+      if (timeout) clearTimeout(timeout);
       console.error("Order submit failed:", e);
+      setSubmitStatus(t("errSubmit"));
       if (btn) { btn.disabled = false; btn.textContent = t("formFailed"); }
       setTimeout(() => { if (btn) btn.textContent = oldTxt || t("formSubmit"); }, 1400);
     } finally {
@@ -462,7 +562,11 @@
     document.addEventListener("keydown", (e) => {
       if (e.key === "Escape") {
         if (document.body.classList.contains("checkout-open")) closeCheckout();
-        else closeCart();
+        else if (!$("cart-drawer").classList.contains("translate-x-full")) closeCart();
+      } else if (document.body.classList.contains("checkout-open")) {
+        trapFocus(e, $("checkout-modal"));
+      } else if (!$("cart-drawer").classList.contains("translate-x-full")) {
+        trapFocus(e, $("cart-drawer"));
       }
     });
 

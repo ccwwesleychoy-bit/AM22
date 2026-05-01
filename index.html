@@ -4,8 +4,22 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>AM22 — Morning Ritual</title>
+  <meta name="description" content="AM22 is a minimalist Hong Kong coffee storefront for single-origin drip bag coffee, crafted for quiet morning rituals." />
+  <meta name="robots" content="index, follow" />
   <meta name="google" content="notranslate" />
   <meta http-equiv="Content-Language" content="en, zh-Hant" />
+  <meta name="theme-color" content="#F5F0E8" />
+  <meta name="referrer" content="strict-origin-when-cross-origin" />
+  <meta property="og:type" content="website" />
+  <meta property="og:site_name" content="AM22" />
+  <meta property="og:title" content="AM22 — Morning Ritual" />
+  <meta property="og:description" content="Single-origin drip coffee, crafted for quiet mornings." />
+  <meta property="og:image" content="images/nutty.svg" />
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:title" content="AM22 — Morning Ritual" />
+  <meta name="twitter:description" content="Single-origin drip coffee, crafted for quiet mornings." />
+  <link rel="icon" href="favicon.svg" type="image/svg+xml" />
+  <link rel="manifest" href="site.webmanifest" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300;1,400&family=Noto+Serif+TC:wght@300;400&family=Noto+Sans+TC:wght@300;400&family=Tenor+Sans&display=swap" rel="stylesheet" />
@@ -33,7 +47,6 @@
       }
     }
   </script>
-  <link rel="stylesheet" href="styles.css" />
   <style>
     /* ================================================================
        INLINE STYLES — duplicates styles.css so Cloudflare cannot break
@@ -317,16 +330,16 @@
 <body class="bg-cream text-brown font-serif" translate="no">
 
   <!-- CART OVERLAY -->
-  <div id="cart-overlay" class="fixed inset-0 bg-brown/20 z-40 hidden"></div>
+  <div id="cart-overlay" class="fixed inset-0 bg-brown/20 z-40 hidden" aria-hidden="true"></div>
 
   <!-- CART DRAWER -->
-  <aside id="cart-drawer" class="fixed top-0 right-0 h-[100dvh] w-full max-w-md bg-cream z-50 translate-x-full flex flex-col shadow-2xl">
+  <aside id="cart-drawer" class="fixed top-0 right-0 h-[100dvh] w-full max-w-md bg-cream z-50 translate-x-full flex flex-col shadow-2xl" role="dialog" aria-modal="true" aria-labelledby="cart-title" tabindex="-1">
     <div class="flex items-center justify-between px-8 py-6 border-b border-cream-border">
-      <h2 class="text-xs tracking-[0.28em] uppercase" data-i18n="cartTitle">Your Cart</h2>
-      <button onclick="AM22.closeCart()" class="text-xs tracking-[0.22em] uppercase text-brown-light hover:text-brown transition-colors" data-i18n="cartClose">Close</button>
+      <h2 id="cart-title" class="text-xs tracking-[0.28em] uppercase" data-i18n="cartTitle">Your Cart</h2>
+      <button onclick="AM22.closeCart()" class="text-xs tracking-[0.22em] uppercase text-brown-light hover:text-brown transition-colors" data-i18n="cartClose" aria-label="Close cart">Close</button>
     </div>
 
-    <div id="cart-items" class="flex-1 overflow-y-auto px-8 py-2"></div>
+    <div id="cart-items" class="flex-1 overflow-y-auto px-8 py-2" aria-live="polite"></div>
 
     <div class="px-8 py-6 border-t border-cream-border">
 
@@ -378,7 +391,7 @@
           <span class="text-brown-pale text-xs select-none">/</span>
           <button class="lang-btn" data-lang="zh-Hant" onclick="setLang('zh-Hant')">中文</button>
         </div>
-        <button onclick="AM22.openCart()" class="relative flex items-center gap-2 text-xs tracking-[0.22em] uppercase text-brown-mid hover:text-brown transition-colors" aria-label="Cart">
+        <button id="btn-cart" onclick="AM22.openCart()" class="relative flex items-center gap-2 text-xs tracking-[0.22em] uppercase text-brown-mid hover:text-brown transition-colors" aria-label="Open cart" aria-haspopup="dialog" aria-controls="cart-drawer" aria-expanded="false">
           <svg width="17" height="19" viewBox="0 0 17 19" fill="none" stroke="currentColor" stroke-width="1.1" stroke-linecap="round" stroke-linejoin="round">
             <rect x="1" y="6" width="15" height="12" rx="1"/>
             <path d="M5 6V4.5a3.5 3.5 0 0 1 7 0V6"/>
@@ -525,8 +538,8 @@
   </footer>
 
   <!-- =================== CHECKOUT MODAL =================== -->
-  <div id="checkout-modal" class="fixed inset-0 z-[100] hidden">
-    <div id="checkout-backdrop" class="absolute inset-0 bg-brown/40 backdrop-blur-[2px]"></div>
+  <div id="checkout-modal" class="fixed inset-0 z-[100] hidden" role="dialog" aria-modal="true" aria-labelledby="checkout-title" tabindex="-1">
+    <div id="checkout-backdrop" class="absolute inset-0 bg-brown/40 backdrop-blur-[2px]" aria-hidden="true"></div>
 
     <div class="absolute inset-0 overflow-y-auto">
       <div class="min-h-full flex items-start md:items-center justify-center p-0 md:p-6">
@@ -534,8 +547,8 @@
 
           <!-- Header -->
           <div class="sticky top-0 z-10 flex items-center justify-between px-7 py-5 border-b border-cream-border bg-cream">
-            <div class="text-xs tracking-[0.28em] uppercase" data-i18n="chkTitle">Checkout</div>
-            <button onclick="AM22.closeCheckout()" class="text-[11px] tracking-[0.22em] uppercase text-brown-light hover:text-brown transition-colors" data-i18n="cartClose">Close</button>
+            <div id="checkout-title" class="text-xs tracking-[0.28em] uppercase" data-i18n="chkTitle">Checkout</div>
+            <button onclick="AM22.closeCheckout()" class="text-[11px] tracking-[0.22em] uppercase text-brown-light hover:text-brown transition-colors" data-i18n="cartClose" aria-label="Close checkout">Close</button>
           </div>
 
           <!-- Body (form view) -->
@@ -577,21 +590,25 @@
             <form id="form-order" class="space-y-5">
               <input type="hidden" id="order-id-field"      name="order_id"      value="" />
               <input type="hidden" id="order-summary-field" name="order_summary" value="" />
+              <label class="sr-only" aria-hidden="true">
+                Website
+                <input name="website" type="text" tabindex="-1" autocomplete="off" />
+              </label>
 
               <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <label class="block">
                   <span class="block text-[11px] tracking-[0.22em] uppercase text-brown-light" data-i18n="formName">Name</span>
-                  <input name="name" required class="mt-2 w-full bg-transparent border-b border-cream-border focus:border-brown outline-none px-0 py-2.5 text-sm text-brown transition-colors" />
+                  <input name="name" required autocomplete="name" class="mt-2 w-full bg-transparent border-b border-cream-border focus:border-brown outline-none px-0 py-2.5 text-sm text-brown transition-colors" />
                 </label>
                 <label class="block">
                   <span class="block text-[11px] tracking-[0.22em] uppercase text-brown-light" data-i18n="formPhone">Phone / WhatsApp</span>
-                  <input name="phone" required inputmode="tel" class="mt-2 w-full bg-transparent border-b border-cream-border focus:border-brown outline-none px-0 py-2.5 text-sm text-brown transition-colors" />
+                  <input name="phone" required type="tel" inputmode="tel" autocomplete="tel" class="mt-2 w-full bg-transparent border-b border-cream-border focus:border-brown outline-none px-0 py-2.5 text-sm text-brown transition-colors" />
                 </label>
               </div>
 
               <label class="block">
                 <span class="block text-[11px] tracking-[0.22em] uppercase text-brown-light" data-i18n="formAddress">Shipping Address</span>
-                <textarea name="address" required rows="2" class="mt-2 w-full bg-transparent border-b border-cream-border focus:border-brown outline-none px-0 py-2.5 text-sm text-brown transition-colors resize-none"></textarea>
+                <textarea name="address" required rows="2" autocomplete="street-address" class="mt-2 w-full bg-transparent border-b border-cream-border focus:border-brown outline-none px-0 py-2.5 text-sm text-brown transition-colors resize-none"></textarea>
               </label>
 
               <label class="block">
@@ -604,7 +621,7 @@
                 <div class="text-[11px] tracking-[0.22em] uppercase text-brown-light" data-i18n="formPayCap">Payment Screenshot</div>
                 <p class="mt-2 text-xs leading-relaxed text-brown-mid" data-i18n="formPayHelp">After paying by PayMe or FPS, upload your screenshot here. Required.</p>
 
-                <input id="payment-proof-input" type="file" accept="image/jpeg,image/png,image/webp,.jpg,.jpeg,.png,.webp" class="sr-only" tabindex="-1" aria-hidden="true" />
+                <input id="payment-proof-input" type="file" accept="image/jpeg,image/png,image/webp,.jpg,.jpeg,.png,.webp" class="sr-only" tabindex="-1" aria-hidden="true" aria-describedby="payment-proof-error payment-proof-filename" />
 
                 <div class="mt-4 flex flex-wrap items-center gap-2">
                   <button id="btn-payment-proof-pick" type="button" class="border border-brown/50 px-4 py-2.5 text-[11px] tracking-[0.22em] uppercase text-brown hover:bg-brown hover:text-cream transition-colors" data-i18n="formChooseImg">Choose Image</button>
@@ -620,6 +637,7 @@
                 </div>
               </div>
 
+              <p id="order-submit-status" class="hidden text-center text-[11px] tracking-[0.04em] leading-relaxed text-[#b15a5a]" role="alert" aria-live="assertive"></p>
               <button id="btn-submit-order" type="submit" class="w-full mt-3 py-4 bg-brown text-cream text-xs tracking-[0.32em] uppercase hover:bg-brown-mid transition-colors disabled:opacity-40 disabled:cursor-not-allowed" data-i18n="formSubmit">Submit Order</button>
               <p class="text-center text-[10px] tracking-[0.22em] uppercase text-brown-pale" data-i18n="formTrust">Encrypted · No card stored</p>
             </form>
