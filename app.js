@@ -95,6 +95,19 @@
     status.classList.toggle("text-brown-mid", !isError);
   }
 
+  function updateCheckoutShippingNote() {
+    const note = $("checkout-free-shipping-note");
+    if (!note) return;
+    const sub = subtotal();
+    if (sub > 0 && sub < freeAtAmount) {
+      note.textContent = (t("chkFreeShipNote") || "").replace("{amt}", money(freeAtAmount - sub));
+      note.classList.remove("hidden");
+    } else {
+      note.textContent = "";
+      note.classList.add("hidden");
+    }
+  }
+
   // ---------- CART MATH ----------
   function subtotal() {
     return Object.keys(state.cart).reduce((s, id) => {
@@ -293,6 +306,7 @@
     $("checkout-order-id").textContent = state.orderId;
     $("success-order-id").textContent = state.orderId;
     $("checkout-summary").textContent = buildOrderSummary();
+    updateCheckoutShippingNote();
 
     const payme = $("payme-link");
     if (payme) payme.href = cfg.payMeUrl || "#";

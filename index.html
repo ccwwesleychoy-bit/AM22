@@ -362,6 +362,66 @@
     html[lang="zh-Hant"] footer nav {
       line-height: 1.9;
     }
+
+    /* Targeted readability pass for small supporting text. */
+    #shop [data-i18n="p1Sub"],
+    #shop [data-i18n="p2Sub"],
+    #shop [data-i18n="p1Meta"],
+    #shop [data-i18n="p2Meta"] {
+      letter-spacing: 0.14em;
+    }
+
+    #shop [data-i18n="p1Desc1"],
+    #shop [data-i18n="p1Desc2"],
+    #shop [data-i18n="p2Desc1"],
+    #shop [data-i18n="p2Desc2"],
+    #story p[data-i18n],
+    #collaboration [data-i18n="collabBody"] {
+      color: #594737;
+    }
+
+    #shop [data-i18n="p1Meta"],
+    #shop [data-i18n="p2Meta"] {
+      color: #6B5540;
+    }
+
+    .bg-cream-dark\/40 [data-i18n^="trust"] {
+      color: #594737;
+      letter-spacing: 0.18em;
+    }
+
+    #checkout-modal .text-\[11px\],
+    #checkout-modal .text-\[10px\] {
+      color: #7A614A;
+    }
+
+    #checkout-free-shipping-note,
+    #payment-proof-error,
+    #order-submit-status {
+      font-size: 0.72rem;
+    }
+
+    @media (max-width: 640px) {
+      #shop [data-i18n="p1Desc1"],
+      #shop [data-i18n="p1Desc2"],
+      #shop [data-i18n="p2Desc1"],
+      #shop [data-i18n="p2Desc2"],
+      #story p[data-i18n],
+      #collaboration [data-i18n="collabBody"] {
+        font-size: 0.92rem;
+      }
+
+      footer nav {
+        font-size: 0.78rem;
+        letter-spacing: 0.14em;
+      }
+
+      footer [data-i18n="footerPolicy"],
+      footer [data-i18n="footerRights"] {
+        font-size: 0.74rem;
+        letter-spacing: 0.08em;
+      }
+    }
   </style>
 </head>
 <body class="bg-cream text-brown font-serif" translate="no">
@@ -489,6 +549,7 @@
                 <div>
                   <h3 class="text-xl tracking-[0.06em]" data-i18n="p1Name">Nutty Drip Bag</h3>
                   <p class="text-xs tracking-[0.24em] uppercase text-brown-light mt-1.5" data-i18n="p1Sub">Single Origin · 10 Packs</p>
+                  <p class="text-xs tracking-[0.12em] uppercase text-brown-light mt-2" data-i18n="p1Meta">Medium Roast</p>
                 </div>
                 <span class="text-lg tracking-wider price" data-i18n="p1Price">HK$120</span>
               </div>
@@ -508,6 +569,7 @@
                 <div>
                   <h3 class="text-xl tracking-[0.06em]" data-i18n="p2Name">Fruity &amp; Floral Drip Bag</h3>
                   <p class="text-xs tracking-[0.24em] uppercase text-brown-light mt-1.5" data-i18n="p2Sub">Single Origin · 2 Varieties · 10 Packs Total</p>
+                  <p class="text-xs tracking-[0.12em] uppercase text-brown-light mt-2" data-i18n="p2Meta">Medium Light Roast</p>
                 </div>
                 <span class="text-lg tracking-wider price" data-i18n="p2Price">HK$150</span>
               </div>
@@ -623,6 +685,7 @@
             <div class="border-b border-cream-border pb-6 mb-6">
               <div class="text-[11px] tracking-[0.22em] uppercase text-brown-light mb-3" data-i18n="chkOrderSummary">Order Summary</div>
               <pre id="checkout-summary" class="whitespace-pre-wrap text-sm leading-[1.85] text-brown-mid font-serif tracking-[0.02em]"></pre>
+              <p id="checkout-free-shipping-note" class="hidden mt-4 border border-cream-border bg-cream-dark/50 px-4 py-3 text-xs leading-relaxed tracking-[0.04em] text-brown-mid"></p>
             </div>
 
             <!-- Order ID -->
@@ -685,6 +748,7 @@
               <div class="border border-cream-border bg-cream-dark/40 px-5 py-5 mt-2">
                 <div class="text-[11px] tracking-[0.22em] uppercase text-brown-light" data-i18n="formPayCap">Payment Screenshot</div>
                 <p class="mt-2 text-xs leading-relaxed text-brown-mid" data-i18n="formPayHelp">After paying by PayMe or FPS, upload your screenshot here. Required.</p>
+                <p class="mt-1.5 text-[11px] leading-relaxed tracking-[0.03em] text-brown-pale" data-i18n="formPayPrivacy">Payment screenshots are used only to verify your order.</p>
 
                 <input id="payment-proof-input" type="file" accept="image/jpeg,image/png,image/webp,.jpg,.jpeg,.png,.webp" class="sr-only" tabindex="-1" aria-hidden="true" aria-describedby="payment-proof-error payment-proof-filename" />
 
